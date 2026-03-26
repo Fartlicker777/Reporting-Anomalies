@@ -160,7 +160,7 @@ public class ReportingAnomalies : MonoBehaviour {
 
       string missionDesc = KTMissionGetter.Mission.Description;
       if (missionDesc != null) {
-         Regex regex = new Regex(@"(\[)(Reporting Anomalies)(\s)(\d{1,3})(%)?(,)(\s)*(\d{1,3})(%)?(\])"); // Valid string would look something like "[Reporting Anomalies] 10%, 93%"
+         Regex regex = new Regex(@"(\[)(Reporting Anomalies)(\s)(\d{1,3})(%)?(,)(\s)*(\d{1,3})(%)?(\])"); // Valid string would look something like "[Reporting Anomalies 10%, 93%]"
          var match = regex.Match(missionDesc);
          if (match.Success) {
             string matchstr = match.ToString().Replace(" ",""); //Removes spaces from the valid set to make indexing easier
@@ -175,7 +175,7 @@ public class ReportingAnomalies : MonoBehaviour {
             Debug.Log(matchstr.IndexOf(',') + 1);
             Debug.Log(length);
             Debug.Log(matchstr.Substring(matchstr.IndexOf(',') + 1, length - (matchstr.IndexOf('%') + 2)));
-            int UpperBound = int.Parse(matchstr.Substring(matchstr.IndexOf(',') + 1, length - matchstr.IndexOf('%') + 2)); //Has to start from first % since it can be a 1-3 digit number.
+            int UpperBound = int.Parse(matchstr.Substring(matchstr.IndexOf(',') + 1, length - (matchstr.IndexOf('%') + 2))); //Has to start from first % since it can be a 1-3 digit number.
             Debug.Log(UpperBound);
 
             if (LowerBound > UpperBound) { //Makes sure lower and upper bounds are truly lower and upper
@@ -190,6 +190,9 @@ public class ReportingAnomalies : MonoBehaviour {
                UpperBound++;
             }
             ModifiedAnomalyRNG = true;
+
+            AnomalyRNGLowerBound = LowerBound;
+            AnomalyRNGUpperBound = UpperBound;
          }
       }
 
